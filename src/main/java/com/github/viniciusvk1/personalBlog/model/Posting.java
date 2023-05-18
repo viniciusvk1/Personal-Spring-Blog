@@ -1,5 +1,6 @@
 package com.github.viniciusvk1.personalBlog.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -25,6 +26,18 @@ public class Posting {
 
     @UpdateTimestamp
     private LocalDateTime date;
+
+    public Theme getTheme() {
+        return theme;
+    }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+    }
+
+    @ManyToOne
+    @JsonIgnoreProperties("posting")
+    private Theme theme;
 
     public Long getId() {
         return id;

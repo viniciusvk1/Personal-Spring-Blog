@@ -10,5 +10,4 @@ public interface PostsRepository extends JpaRepository<Posting, Long> {
 
     public List<Posting> findAllByTitleContainingIgnoreCase(@Param("title") String title);
 
-
 }

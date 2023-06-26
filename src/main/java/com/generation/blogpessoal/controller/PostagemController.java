@@ -1,4 +1,4 @@
-package com.github.viniciusvk1.controller;
+package com.generation.blogpessoal.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.github.viniciusvk1.model.Postagem;
-import com.github.viniciusvk1.repository.PostagemRepository;
-import com.github.viniciusvk1.repository.TemaRepository;
+import com.generation.blogpessoal.model.Postagem;
+import com.generation.blogpessoal.repository.PostagemRepository;
+import com.generation.blogpessoal.repository.TemaRepository;
 
 import jakarta.validation.Valid;
 
@@ -40,48 +40,51 @@ public class PostagemController {
 		return ResponseEntity.ok(postagemRepository.findAll());
 	}
 
-	@GetMapping("/{id}")
+	// busca por id\\
+	@GetMapping("{id}")
 	public ResponseEntity<Postagem> getById(@PathVariable Long id) {
 		return postagemRepository.findById(id).map(resposta -> ResponseEntity.ok(resposta))
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
 
+//busca por titulo\\
 	@GetMapping("/titulo/{titulo}")
 	public ResponseEntity<List<Postagem>> getByTitulo(@PathVariable String titulo) {
 		return ResponseEntity.ok(postagemRepository.findAllByTituloContainingIgnoreCase(titulo));
+
 	}
 
+	// Cria uma nova publicação\\
 	@PostMapping
 	public ResponseEntity<Postagem> post(@Valid @RequestBody Postagem postagem) {
 		if (temaRepository.existsById(postagem.getTema().getId()))
 			return ResponseEntity.status(HttpStatus.CREATED).body(postagemRepository.save(postagem));
 
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tema naom existe!", null);
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tema Não Existe!!", null);
 	}
 
+	// Atualiza as informações dentro de informações já criadas\\
 	@PutMapping
 	public ResponseEntity<Postagem> put(@Valid @RequestBody Postagem postagem) {
 		if (postagemRepository.existsById(postagem.getId())) {
+
 			if (temaRepository.existsById(postagem.getTema().getId()))
 				return ResponseEntity.status(HttpStatus.OK).body(postagemRepository.save(postagem));
 
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tema nao existe!".concat(null));
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tema Não Existe", null);
 		}
-
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}
 
+	/// Deleta através do id
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@DeleteMapping("/{id}")
+	@DeleteMapping("{id}")
 	public void delete(@PathVariable Long id) {
 		Optional<Postagem> postagem = postagemRepository.findById(id);
 
-		if (postagem.isEmpty()) {
+		if (postagem.isEmpty())
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-		}
-
 		postagemRepository.deleteById(id);
 
 	}
-
 }

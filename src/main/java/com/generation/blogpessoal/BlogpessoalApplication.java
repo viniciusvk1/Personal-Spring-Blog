@@ -1,13 +1,13 @@
-package com.github.viniciusvk1;
+package com.generation.blogpessoal;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PersonalBlogApplication {
+public class BlogpessoalApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PersonalBlogApplication.class, args);
+		SpringApplication.run(BlogpessoalApplication.class, args);
 	}
 
 }

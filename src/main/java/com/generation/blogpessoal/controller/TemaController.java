@@ -1,4 +1,4 @@
-package com.github.viniciusvk1.controller;
+package com.generation.blogpessoal.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,13 +18,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.github.viniciusvk1.model.Tema;
-import com.github.viniciusvk1.repository.TemaRepository;
+import com.generation.blogpessoal.model.Postagem;
+import com.generation.blogpessoal.model.Tema;
+import com.generation.blogpessoal.repository.TemaRepository;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/temas")
+@RequestMapping("/tema")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class TemaController {
 
@@ -32,7 +33,7 @@ public class TemaController {
 	private TemaRepository temaRepository;
 
 	@GetMapping
-	public ResponseEntity<List<Tema>> getAll() {
+	private ResponseEntity<List<Tema>> getAll() {
 		return ResponseEntity.ok(temaRepository.findAll());
 	}
 
@@ -53,21 +54,21 @@ public class TemaController {
 	}
 
 	@PutMapping
-	public ResponseEntity<Tema> put(@Valid @RequestBody Tema tema) {
+	public ResponseEntity<Tema> put(@Valid @PathVariable Tema tema) {
 		return temaRepository.findById(tema.getId())
 				.map(resposta -> ResponseEntity.status(HttpStatus.CREATED).body(temaRepository.save(tema)))
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+
 	}
 
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@DeleteMapping("/{id}")
+	@DeleteMapping("{id}")
 	public void delete(@PathVariable Long id) {
 		Optional<Tema> tema = temaRepository.findById(id);
 
 		if (tema.isEmpty())
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-
 		temaRepository.deleteById(id);
-	}
 
+	}
 }
